@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 import DeviceInfo from "react-native-device-info";
-import Geolocation from "react-native-geolocation-service";
+// import Geolocation from "react-native-geolocation-service";
 import publicIp from "react-native-public-ip";
 import { request, PERMISSIONS, PermissionStatus } from "react-native-permissions";
 
@@ -68,17 +68,22 @@ const useDeviceInfo = () => {
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
     ).then((result) => {
       if (result === "granted") {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            setDeviceData((prev) => ({
-              ...prev,
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            }));
-          },
-          (error) => console.error("Error getting location:", error),
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        );
+        // Geolocation.getCurrentPosition(
+        //   (position) => {
+        //     setDeviceData((prev) => ({
+        //       ...prev,
+        //       latitude: position.coords.latitude,
+        //       longitude: position.coords.longitude,
+        //     }));
+        //   },
+        //   (error) => console.error("Error getting location:", error),
+        //   { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        // );
+        setDeviceData((prev) => ({
+            ...prev,
+            latitude: 1113030,
+            longitude: 3243334.33333,
+          }));
       }
     });
   };
@@ -86,7 +91,6 @@ const useDeviceInfo = () => {
   // Function to detect screenshot
   const detectScreenshot = () => {
     if (ScreenshotModule) {
-      ScreenshotModule.startListening();
       const eventEmitter = new NativeEventEmitter(ScreenshotModule);
       eventEmitter.addListener("ScreenshotTaken", () => {
         setDeviceData((prev) => ({ ...prev, screenshotDetected: true }));

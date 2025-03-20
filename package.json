@@ -14,7 +14,6 @@
     "react": "19.0.0",
     "react-native": "0.78.1",
     "react-native-device-info": "^14.0.4",
-    "react-native-geolocation-service": "^5.3.1",
     "react-native-permissions": "^5.2.6",
     "react-native-public-ip": "^1.0.2",
     "yarn": "^1.22.22"
