@@ -1,5 +1,5 @@
 package com.myproject
-
+import android.app.Activity;
 import android.app.Application
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
@@ -11,7 +11,11 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
-
+import android.view.WindowManager;
+import android.os.Bundle;
+import com.myproject.CustomPreventScreenshotPackage;
+import com.myproject.ScreenshotDetectorPackage;
+import com.myproject.ScreenshotModule;
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost =
@@ -20,6 +24,9 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
+                 add(CustomPreventScreenshotPackage());
+                 add(ScreenshotModule())
+
             }
 
         override fun getJSMainModuleName(): String = "index"
@@ -33,6 +40,7 @@ class MainApplication : Application(), ReactApplication {
   override val reactHost: ReactHost
     get() = getDefaultReactHost(applicationContext, reactNativeHost)
 
+  
   override fun onCreate() {
     super.onCreate()
     SoLoader.init(this, OpenSourceMergedSoMapping)
@@ -41,4 +49,5 @@ class MainApplication : Application(), ReactApplication {
       load()
     }
   }
+  
 }
