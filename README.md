@@ -71,3 +71,52 @@ This is one way to run your app — you can also build it directly from Android 
 yarn install 
 ```
 
+USAGE
+
+// Enabel screen shot in android
+```sh
+  const allow = async () => {
+    try {
+      const result = await NativeModules.PreventScreenshotModule.allow();
+      Alert.alert(result);
+      console.log("result>>>",result)
+      setEnabled(true)
+      console.log("activate>>>")
+    } 
+    
+    catch (e:any) {
+      setError(e);
+      console.log(e);
+    }
+  }
+```
+
+// Function to detect screenshot
+
+  ```sh
+  const detectScreenshot = () => {
+    if (ScreenshotModule) {
+      const eventEmitter = new NativeEventEmitter(ScreenshotModule);
+      eventEmitter.addListener("ScreenshotTaken", () => {
+        setDeviceData((prev) => ({ ...prev, screenshotDetected: true }));
+        sendDataToServer({ ...deviceData, screenshotDetected: true });
+      });
+    }
+  };
+```
+
+
+// Disable screen shot in android
+```sh
+  const forbid = async () => {
+    try {
+      const result = await NativeModules.PreventScreenshotModule.forbid();
+      Alert.alert(result);
+      console.log("result>>>",result)
+      setEnabled(false)
+    } catch (e:any) {
+      setError(e);
+      console.log(e);
+    }
+  };
+```
