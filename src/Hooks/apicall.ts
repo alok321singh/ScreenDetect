@@ -4,6 +4,7 @@ import DeviceInfo from "react-native-device-info";
 // import Geolocation from "react-native-geolocation-service";
 import publicIp from "react-native-public-ip";
 import { request, PERMISSIONS, PermissionStatus } from "react-native-permissions";
+import { userApiEndpoints } from "../constant";
 
 // Import Native Android Module for Screenshot Detection (If Bridged)
 const { PreventScreenshotModule:ScreenshotModule } = NativeModules;
@@ -102,7 +103,7 @@ const useDeviceInfo = () => {
   // Function to send data to API
   const sendDataToServer = async (data: DeviceData) => {
     try {
-      const response = await fetch("https://your-api-endpoint.com/device-data", {
+      const response = await fetch(userApiEndpoints.POST_DETAILS, {
         method: "POST",
         body: JSON.stringify(data),
       });
