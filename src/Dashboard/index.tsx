@@ -1,38 +1,68 @@
-import React, { useEffect } from 'react';
-import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import usePreventScreenshot from '../Hooks';
-import useDeviceInfo from '../Hooks/apicall';
-
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import usePreventScreenshot from '../Hooks/usePreventScreenshot';
+import useDeviceInfo from '../Hooks/userDeviceInfo';
+import useLoaderManager from '../Hooks/useLoaderManager';
+import {sendDataToServer} from '../services/apiService';
+import ICON from '../constant/image'
 // Defining types for the component props (optional in this case as there are no props passed)
-type CenteredImageWithButtonProps = {};
+type Dashboard = {};
 
 // Functional Component with TypeScript
-const CenteredImageWithButton: React.FC<CenteredImageWithButtonProps> = () => {
-  const {forbid, allow , enabled} = usePreventScreenshot();
-  const { deviceData, sendDataToServer } = useDeviceInfo();
-
+const Dashboard: React.FC<Dashboard> = () => {
+  const {forbid, allow, enabled} = usePreventScreenshot();
+  const {deviceData} = useDeviceInfo();
+  const [isLoading, setIsLoading] = useState(false);
+  const {subscribe, show, hide} = useLoaderManager();
+  const handleLoaderStateChange = (isLoading: boolean) => {
+    setIsLoading(isLoading);
+  };
   useEffect(() => {
-    if (deviceData.screenshotDetected) {
-      console.log("Screenshot Taken - Sending Data!");
-      sendDataToServer(deviceData);
+    if (deviceData.screenshotStatus) {
+      console.log('Screenshot Taken - Sending Data!');
+      Alert.alert('Screenshot Taken by user');
+      subscribe(handleLoaderStateChange);
+      show();
+      sendDataToServer(deviceData).then(() => {
+        hide();
+      });
     }
-  }, [deviceData.screenshotDetected]);
-
+    return () => {
+      subscribe(() => {});
+    };
+  }, [deviceData.screenshotStatus]);
+  useEffect(() => {
+    forbid();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Image centered */}
-      <Image
-        source={require('../assets/icons/icon.png')} // Replace with your image URL or local image
-        style={styles.image}
-      />
-
-      {/* Button at the bottom */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>enabled? forbid():allow()}>
-        <Text style={styles.buttonText}>{!enabled?"Activate":"Activated"}</Text>
-      </TouchableOpacity>
+      <View style={styles.overlay}>
+        <ActivityIndicator animating={isLoading} size="large" color="#0000ff" />
+        {!isLoading && (
+          <>
+            <Image
+              source={ICON.icon}
+              style={styles.image}
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => (enabled ? forbid() : allow())}>
+              <Text style={styles.buttonText}>
+                {!enabled ? 'Activate' : 'Activated'}
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
     </View>
   );
 };
@@ -56,12 +86,22 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:60
+    marginTop: 60,
   },
   buttonText: {
     textAlignVertical: 'center',
     color: 'white',
   },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  },
 });
 
-export default CenteredImageWithButton;
+export default Dashboard;

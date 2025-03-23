@@ -14,7 +14,7 @@ import {
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
-import CenteredImageWithButton from './src/Dashboard';
+import Dashboard from './src/dashboard';
 
 
 function App(): React.JSX.Element {
@@ -41,7 +41,7 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <CenteredImageWithButton/>
+      <Dashboard/>
     </View>
   );
 }

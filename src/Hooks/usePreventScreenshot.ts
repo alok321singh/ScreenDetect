@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, NativeModules } from 'react-native';
+import {NativeModules } from 'react-native';
 
 const usePreventScreenshot = () => {
   const [error, setError] = useState(null);
@@ -8,7 +8,7 @@ const usePreventScreenshot = () => {
   const forbid = async () => {
     try {
       const result = await NativeModules.PreventScreenshotModule.forbid();
-      Alert.alert(result);
+      // Alert.alert(result);
       console.log("result>>>",result)
       setEnabled(false)
     } catch (e:any) {
@@ -20,7 +20,7 @@ const usePreventScreenshot = () => {
   const allow = async () => {
     try {
       const result = await NativeModules.PreventScreenshotModule.allow();
-      Alert.alert(result);
+      // Alert.alert(result);
       console.log("result>>>",result)
       setEnabled(true)
       console.log("activate>>>")
