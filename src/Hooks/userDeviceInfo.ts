@@ -1,9 +1,7 @@
 import {useEffect, useState} from 'react';
 import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import publicIp from 'react-native-public-ip';
 import {request, PERMISSIONS, PermissionStatus} from 'react-native-permissions';
-import {sendDataToServer} from '../services/apiService'; // Import the API call function
 
 // Define types for device data
 export interface DeviceData {
@@ -86,7 +84,6 @@ const useDeviceInfo = () => {
       const eventEmitter = new NativeEventEmitter(ScreenshotModule);
       eventEmitter.addListener('ScreenshotTaken', () => {
         setDeviceData(prev => ({...prev, screenshotStatus: true}));
-        sendDataToServer({...deviceData, screenshotStatus: true});
       });
     }
   };
@@ -97,7 +94,7 @@ const useDeviceInfo = () => {
     detectScreenshot();
   }, []);
 
-  return {deviceData};
+  return {deviceData,setDeviceData};
 };
 
 export default useDeviceInfo;

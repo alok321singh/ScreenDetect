@@ -12,14 +12,14 @@ import usePreventScreenshot from '../Hooks/usePreventScreenshot';
 import useDeviceInfo from '../Hooks/userDeviceInfo';
 import useLoaderManager from '../Hooks/useLoaderManager';
 import {sendDataToServer} from '../services/apiService';
-import ICON from '../constant/image'
+import ICON from '../constant/image';
 // Defining types for the component props (optional in this case as there are no props passed)
 type Dashboard = {};
 
 // Functional Component with TypeScript
 const Dashboard: React.FC<Dashboard> = () => {
   const {forbid, allow, enabled} = usePreventScreenshot();
-  const {deviceData} = useDeviceInfo();
+  const {deviceData, setDeviceData} = useDeviceInfo();
   const [isLoading, setIsLoading] = useState(false);
   const {subscribe, show, hide} = useLoaderManager();
   const handleLoaderStateChange = (isLoading: boolean) => {
@@ -32,6 +32,7 @@ const Dashboard: React.FC<Dashboard> = () => {
       subscribe(handleLoaderStateChange);
       show();
       sendDataToServer(deviceData).then(() => {
+        setDeviceData(prev => ({...prev, screenshotStatus: false}));
         hide();
       });
     }
@@ -49,10 +50,7 @@ const Dashboard: React.FC<Dashboard> = () => {
         <ActivityIndicator animating={isLoading} size="large" color="#0000ff" />
         {!isLoading && (
           <>
-            <Image
-              source={ICON.icon}
-              style={styles.image}
-            />
+            <Image source={ICON.icon} style={styles.image} />
             <TouchableOpacity
               style={styles.button}
               onPress={() => (enabled ? forbid() : allow())}>
