@@ -13,6 +13,7 @@ import useDeviceInfo from '../Hooks/userDeviceInfo';
 import useLoaderManager from '../Hooks/useLoaderManager';
 import {sendDataToServer} from '../services/apiService';
 import ICON from '../constant/image';
+import COLOR from '../constant/color';
 // Defining types for the component props (optional in this case as there are no props passed)
 type Dashboard = {};
 
@@ -31,10 +32,15 @@ const Dashboard: React.FC<Dashboard> = () => {
       Alert.alert('Screenshot Taken by user');
       subscribe(handleLoaderStateChange);
       show();
-      sendDataToServer(deviceData).then(() => {
-        setDeviceData(prev => ({...prev, screenshotStatus: false}));
-        hide();
-      });
+      sendDataToServer(deviceData)
+        .then(() => {
+          setDeviceData(prev => ({...prev, screenshotStatus: false}));
+          hide();
+        })
+        .catch(() => {
+          setDeviceData(prev => ({...prev, screenshotStatus: false}));
+          hide();
+        });
     }
     return () => {
       subscribe(() => {});
@@ -47,7 +53,7 @@ const Dashboard: React.FC<Dashboard> = () => {
   return (
     <View style={styles.container}>
       <View style={styles.overlay}>
-        <ActivityIndicator animating={isLoading} size="large" color="#0000ff" />
+        <ActivityIndicator animating={isLoading} size="large" color={COLOR.blue} />
         {!isLoading && (
           <>
             <Image source={ICON.icon} style={styles.image} />

@@ -13,8 +13,8 @@ export const sendDataToServer = async (data: DeviceData) => {
       body:JSON.stringify([data]),
     });
     const result = await response.json();
-    console.log("Data sent successfully:");
+    console.log("Data sent successfully:",result);
   } catch (error) {
-    // console.error("Error sending data:", error);
+    console.error("Error sending data:", error);
   }
 };
