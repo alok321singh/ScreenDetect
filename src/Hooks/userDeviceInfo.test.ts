@@ -1,4 +1,3 @@
-import { getDeviceInfo } from './userDeviceInfo'; // Import your function
 import DeviceInfo from 'react-native-device-info'; // Assuming you're using this module
 
 jest.mock('react-native-device-info'); // Mock the entire DeviceInfo module
